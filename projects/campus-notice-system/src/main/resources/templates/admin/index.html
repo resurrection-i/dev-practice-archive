@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>管理后台 - 校园公告系统</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 粉色主题配色 - 管理后台 */
+        :root {
+            --pink-primary: #ff6b9d;
+            --pink-secondary: #ffc1e3;
+            --pink-light: #fff0f6;
+            --pink-dark: #e91e63;
+        }
+        
+        body { 
+            background: linear-gradient(135deg, #fff0f6 0%, #ffe4f0 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--pink-primary) 0%, var(--pink-dark) 100%) !important;
+            box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+        }
+        
+        .sidebar {
+            min-height: calc(100vh - 56px);
+            background: linear-gradient(180deg, #ff6b9d 0%, #e91e63 100%);
+            box-shadow: 2px 0 8px rgba(255, 107, 157, 0.2);
+        }
+        
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.9);
+            padding: 15px 20px;
+            border-left: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left-color: white;
+            color: white;
+        }
+        
+        .stat-card {
+            border-left: 4px solid;
+            transition: all 0.3s;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(255, 107, 157, 0.15);
+            background: white;
+        }
+        
+        .stat-card:hover { 
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.25);
+        }
+        
+        .stat-card-primary { 
+            border-left-color: var(--pink-primary);
+            background: linear-gradient(135deg, white 0%, #fff0f6 100%);
+        }
+        
+        .stat-card-success { 
+            border-left-color: #ff8fab;
+            background: linear-gradient(135deg, white 0%, #ffe4f0 100%);
+        }
+        
+        .stat-card-warning { 
+            border-left-color: var(--pink-secondary);
+            background: linear-gradient(135deg, white 0%, #fff5f9 100%);
+        }
+        
+        .stat-card-danger { 
+            border-left-color: var(--pink-dark);
+            background: linear-gradient(135deg, white 0%, #ffe0ed 100%);
+        }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(255, 107, 157, 0.15);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--pink-primary) 0%, var(--pink-dark) 100%) !important;
+            border: none !important;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--pink-dark) 0%, #c44569 100%) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-dark">
+        <a class="navbar-brand" href="/admin/index">
+            <i class="fas fa-cog"></i> 校园公告管理后台
+        </a>
+        <div class="ml-auto">
+            <a href="/" class="btn btn-outline-light btn-sm mr-2" target="_blank">
+                <i class="fas fa-home"></i> 前台首页
+            </a>
+            <a href="/admin/logout" class="btn btn-outline-light btn-sm">
+                <i class="fas fa-sign-out-alt"></i> 退出
+            </a>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-md-block sidebar p-0">
+                <div class="nav flex-column">
+                    <a class="nav-link active" href="/admin/index">
+                        <i class="fas fa-tachometer-alt"></i> 数据统计
+                    </a>
+                    <a class="nav-link" href="/admin/notices">
+                        <i class="fas fa-bullhorn"></i> 公告管理
+                    </a>
+                    <a class="nav-link" href="/admin/categories">
+                        <i class="fas fa-folder"></i> 分类管理
+                    </a>
+                    <a class="nav-link" href="/admin/tags">
+                        <i class="fas fa-tags"></i> 标签管理
+                    </a>
+                    <a class="nav-link" href="/admin/comments">
+                        <i class="fas fa-comments"></i> 评论管理
+                    </a>
+                    <a class="nav-link" href="/admin/users">
+                        <i class="fas fa-users"></i> 用户管理
+                    </a>
+                    <a class="nav-link" href="/admin/logs">
+                        <i class="fas fa-history"></i> 操作日志
+                    </a>
+                </div>
+            </nav>
+
+            <main class="col-md-10 ml-sm-auto px-4 py-4">
+                <h4 class="mb-4"><i class="fas fa-chart-line"></i> 数据统计</h4>
+                
+                <!-- 统计卡片 -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <div class="card stat-card stat-card-primary">
+                            <div class="card-body">
+                                <h6 class="text-muted">公告总数</h6>
+                                <h2 th:text="${noticeCount}">0</h2>
+                                <small class="text-muted">已发布公告</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card stat-card-success">
+                            <div class="card-body">
+                                <h6 class="text-muted">用户总数</h6>
+                                <h2 th:text="${userCount}">0</h2>
+                                <small class="text-muted">注册用户</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card stat-card-warning">
+                            <div class="card-body">
+                                <h6 class="text-muted">分类总数</h6>
+                                <h2 th:text="${categoryCount}">0</h2>
+                                <small class="text-muted">公告分类</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card stat-card stat-card-danger">
+                            <div class="card-body">
+                                <h6 class="text-muted">标签总数</h6>
+                                <h2 th:text="${tagCount}">0</h2>
+                                <small class="text-muted">公告标签</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 分类统计 -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6><i class="fas fa-folder"></i> 分类公告统计</h6>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>分类名称</th>
+                                            <th>公告数量</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="stat : ${categoryStats}">
+                                            <td th:text="${stat.name}"></td>
+                                            <td><span class="badge badge-primary" th:text="${stat.count}"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6><i class="fas fa-tags"></i> 标签公告统计</h6>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>标签名称</th>
+                                            <th>公告数量</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="stat : ${tagStats}">
+                                            <td th:text="${stat.name}"></td>
+                                            <td><span class="badge badge-success" th:text="${stat.count}"></span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

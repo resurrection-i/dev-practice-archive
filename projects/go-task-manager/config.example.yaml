@@ -1,0 +1,29 @@
+server:
+  port: 8000
+  mode: debug
+
+database:
+  driver: mysql
+  host: localhost
+  port: 3306
+  username: root
+  password: your_password
+  dbname: task_management
+  charset: utf8mb4
+  parseTime: true
+  loc: Local
+  maxIdleConns: 10
+  maxOpenConns: 100
+
+jwt:
+  secret: your-secret-key
+  expire: 24
+
+log:
+  level: debug
+  filename: ./logs/app.log
+  maxSize: 100
+  maxBackups: 3
+  maxAge: 28
+  compress: true
+

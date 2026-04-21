@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>评论管理 - 校园公告系统</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 粉色主题配色 */
+        :root {
+            --pink-primary: #ff6b9d;
+            --pink-dark: #e91e63;
+        }
+        
+        body { 
+            background: linear-gradient(135deg, #fff0f6 0%, #ffe4f0 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--pink-primary) 0%, var(--pink-dark) 100%) !important;
+        }
+        
+        .sidebar { 
+            min-height: calc(100vh - 56px); 
+            background: linear-gradient(180deg, #ff6b9d 0%, #e91e63 100%);
+            box-shadow: 2px 0 8px rgba(255, 107, 157, 0.2);
+        }
+        
+        .sidebar .nav-link { 
+            color: rgba(255,255,255,0.9); 
+            padding: 12px 20px;
+            transition: all 0.3s;
+        }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { 
+            color: #fff; 
+            background: rgba(255,255,255,0.15);
+        }
+        
+        .content { padding: 30px; }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(255, 107, 157, 0.15);
+        }
+        
+        .card.bg-primary {
+            background: linear-gradient(135deg, var(--pink-primary) 0%, var(--pink-dark) 100%) !important;
+        }
+        
+        .comment-card { transition: all 0.3s; }
+        .comment-card:hover { box-shadow: 0 6px 20px rgba(255, 107, 157, 0.25); }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+        
+        .btn-danger {
+            background: var(--pink-primary) !important;
+            border-color: var(--pink-primary) !important;
+        }
+        
+        .btn-danger:hover {
+            background: var(--pink-dark) !important;
+            border-color: var(--pink-dark) !important;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark">
+        <a class="navbar-brand" href="/admin/index">
+            <i class="fas fa-cog"></i> 校园公告管理后台
+        </a>
+        <div class="ml-auto">
+            <a href="/" class="btn btn-outline-light btn-sm mr-2" target="_blank">
+                前台首页
+            </a>
+            <a href="/admin/logout" class="btn btn-outline-light btn-sm">
+                退出
+            </a>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 侧边栏 -->
+            <nav class="col-md-2 d-md-block sidebar p-0">
+                <div class="nav flex-column">
+                    <a class="nav-link" href="/admin/index">
+                        <i class="fas fa-tachometer-alt"></i> 数据统计
+                    </a>
+                    <a class="nav-link" href="/admin/notices">
+                        <i class="fas fa-bullhorn"></i> 公告管理
+                    </a>
+                    <a class="nav-link" href="/admin/categories">
+                        <i class="fas fa-folder"></i> 分类管理
+                    </a>
+                    <a class="nav-link" href="/admin/tags">
+                        <i class="fas fa-tags"></i> 标签管理
+                    </a>
+                    <a class="nav-link active" href="/admin/comments">
+                        <i class="fas fa-comments"></i> 评论管理
+                    </a>
+                    <a class="nav-link" href="/admin/users">
+                        <i class="fas fa-users"></i> 用户管理
+                    </a>
+                    <a class="nav-link" href="/admin/logs">
+                        <i class="fas fa-history"></i> 操作日志
+                    </a>
+                </div>
+            </nav>
+
+            <!-- 主内容区 -->
+            <main class="col-md-10 ml-sm-auto content">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2><i class="fas fa-comments"></i> 评论管理</h2>
+                </div>
+
+                <!-- 统计卡片 -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card bg-primary text-white">
+                            <div class="card-body">
+                                <h5 class="card-title">总评论数</h5>
+                                <h2 th:text="${comments.size()}">0</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 评论列表 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">评论列表</h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${comments.isEmpty()}" class="alert alert-info text-center">
+                            <i class="fas fa-info-circle"></i> 暂无评论数据
+                        </div>
+
+                        <div class="table-responsive" th:if="${!comments.isEmpty()}">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>用户</th>
+                                        <th>公告标题</th>
+                                        <th>评论内容</th>
+                                        <th>评论时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="comment : ${comments}">
+                                        <td th:text="${comment.id}"></td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img th:src="${comment.avatar != null ? comment.avatar : '/images/default-avatar.svg'}" 
+                                                     class="user-avatar mr-2" 
+                                                     alt="头像"
+                                                     onerror="this.src='/images/default-avatar.svg'">
+                                                <div>
+                                                    <div th:text="${comment.nickname}"></div>
+                                                    <small class="text-muted" th:text="${comment.username}"></small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a th:href="@{/notice/{id}(id=${comment.noticeId})}" 
+                                               th:text="${#strings.abbreviate(comment.noticeTitle, 30)}"
+                                               target="_blank"></a>
+                                        </td>
+                                        <td th:text="${#strings.abbreviate(comment.content, 50)}"></td>
+                                        <td th:text="${#dates.format(comment.createTime, 'yyyy-MM-dd HH:mm')}"></td>
+                                        <td>
+                                            <button class="btn btn-sm btn-danger" 
+                                                    th:attr="data-id=${comment.id}"
+                                                    onclick="deleteComment(this)">
+                                                <i class="fas fa-trash"></i> 删除
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function deleteComment(btn) {
+            if (!confirm('确定要删除这条评论吗？')) {
+                return;
+            }
+
+            var commentId = $(btn).data('id');
+            $.ajax({
+                url: '/admin/comment/' + commentId,
+                type: 'DELETE',
+                success: function(res) {
+                    if (res.code === 200) {
+                        alert('删除成功');
+                        location.reload();
+                    } else {
+                        alert(res.message);
+                    }
+                },
+                error: function() {
+                    alert('删除失败，请重试');
+                }
+            });
+        }
+    </script>
+</body>
+</html>

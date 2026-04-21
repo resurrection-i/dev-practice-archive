@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${notice != null ? '编辑公告' : '新增公告'}">公告表单</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 粉色主题配色 */
+        :root {
+            --pink-primary: #ff6b9d;
+            --pink-dark: #e91e63;
+        }
+        
+        body { 
+            background: linear-gradient(135deg, #fff0f6 0%, #ffe4f0 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: linear-gradient(135deg, var(--pink-primary) 0%, var(--pink-dark) 100%) !important;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(255, 107, 157, 0.15);
+        }
+        
+        .card-header {
+            background: linear-gradient(135deg, var(--pink-primary) 0%, var(--pink-dark) 100%);
+            color: white;
+            border-radius: 12px 12px 0 0 !important;
+            border: none;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--pink-primary) 0%, var(--pink-dark) 100%) !important;
+            border: none !important;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--pink-dark) 0%, #c44569 100%) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+        }
+        
+        .form-control:focus {
+            border-color: var(--pink-primary);
+            box-shadow: 0 0 0 0.2rem rgba(255, 107, 157, 0.25);
+        }
+        
+        .text-danger {
+            color: var(--pink-primary) !important;
+        }
+        
+        .cover-preview { 
+            max-width: 300px; 
+            max-height: 200px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(255, 107, 157, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark">
+        <a class="navbar-brand" href="/admin/index">
+            <i class="fas fa-cog"></i> 校园公告管理后台
+        </a>
+        <div class="ml-auto">
+            <a href="/admin/notices" class="btn btn-outline-light btn-sm">
+                <i class="fas fa-arrow-left"></i> 返回列表
+            </a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 th:text="${notice != null ? '编辑公告' : '新增公告'}"></h5>
+            </div>
+            <div class="card-body">
+                <form id="noticeForm">
+                    <input type="hidden" name="id" th:value="${notice != null ? notice.id : ''}">
+                    <input type="hidden" name="coverImage" id="coverImagePath" th:value="${notice != null ? notice.coverImage : ''}">
+                    
+                    <div class="form-group">
+                        <label>公告标题 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="title" 
+                               th:value="${notice != null ? notice.title : ''}" required>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>分类 <span class="text-danger">*</span></label>
+                                <select class="form-control" name="categoryId" required>
+                                    <option value="">请选择分类</option>
+                                    <option th:each="category : ${categories}" 
+                                            th:value="${category.id}"
+                                            th:text="${category.name}"
+                                            th:selected="${notice != null && notice.categoryId == category.id}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>标签</label>
+                                <select class="form-control" id="tagSelect" multiple>
+                                    <option th:each="tag : ${tags}" 
+                                            th:value="${tag.id}"
+                                            th:text="${tag.name}"
+                                            th:selected="${selectedTagIds != null && #strings.contains(selectedTagIds, tag.id.toString())}">
+                                    </option>
+                                </select>
+                                <small class="form-text text-muted">按住Ctrl可多选</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>封面图片</label>
+                        <div class="input-group">
+                            <input type="file" class="form-control-file" id="coverFile" accept="image/*">
+                        </div>
+                        <img th:if="${notice != null && notice.coverImage != null}" 
+                             th:src="${notice.coverImage}" 
+                             class="cover-preview mt-2" id="coverPreview">
+                    </div>
+
+                    <div class="form-group">
+                        <label>公告内容 <span class="text-danger">*</span></label>
+                        <textarea class="form-control" name="content" rows="10" required 
+                                  th:text="${notice != null ? notice.content : ''}"></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>状态</label>
+                                <select class="form-control" name="status">
+                                    <option value="1" th:selected="${notice == null || notice.status == 1}">已发布</option>
+                                    <option value="0" th:selected="${notice != null && notice.status == 0}">草稿</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>是否置顶</label>
+                                <select class="form-control" name="isTop">
+                                    <option value="0" th:selected="${notice == null || notice.isTop == 0}">否</option>
+                                    <option value="1" th:selected="${notice != null && notice.isTop == 1}">是</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> 保存
+                    </button>
+                    <a href="/admin/notices" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> 取消
+                    </a>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 上传封面
+        $('#coverFile').change(function() {
+            var file = this.files[0];
+            if (!file) return;
+            
+            var formData = new FormData();
+            formData.append('file', file);
+            
+            $.ajax({
+                url: '/admin/notice/uploadCover',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(res) {
+                    if (res.code === 200) {
+                        $('#coverImagePath').val(res.data);
+                        $('#coverPreview').attr('src', res.data).show();
+                        alert('上传成功');
+                    } else {
+                        alert(res.message);
+                    }
+                }
+            });
+        });
+
+        // 提交表单
+        $('#noticeForm').submit(function(e) {
+            e.preventDefault();
+            
+            var selectedTags = $('#tagSelect').val();
+            var tagIds = selectedTags ? selectedTags.join(',') : '';
+            
+            var formData = {
+                id: $('[name="id"]').val(),
+                title: $('[name="title"]').val(),
+                content: $('[name="content"]').val(),
+                categoryId: $('[name="categoryId"]').val(),
+                coverImage: $('#coverImagePath').val(),
+                status: $('[name="status"]').val(),
+                isTop: $('[name="isTop"]').val(),
+                tagIds: tagIds
+            };
+            
+            $.ajax({
+                url: '/admin/notice/save',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(res) {
+                    if (res.code === 200) {
+                        alert('保存成功');
+                        window.location.href = '/admin/notices';
+                    } else {
+                        alert(res.message);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

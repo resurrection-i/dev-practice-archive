@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>操作日志</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --pink-primary: #ff6b9d;
+            --pink-dark: #e91e63;
+        }
+        body { 
+            background: linear-gradient(135deg, #fff0f6 0%, #ffe4f0 100%);
+            min-height: 100vh;
+        }
+        .navbar {
+            background: linear-gradient(135deg, var(--pink-primary) 0%, var(--pink-dark) 100%) !important;
+        }
+        .sidebar {
+            min-height: calc(100vh - 56px);
+            background: linear-gradient(180deg, #ff6b9d 0%, #e91e63 100%);
+        }
+        .sidebar .nav-link {
+            color: rgba(255,255,255,0.9);
+            padding: 15px 20px;
+            border-left: 3px solid transparent;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active { 
+            background-color: rgba(255,255,255,0.15);
+            border-left-color: white;
+            color: white;
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(255, 107, 157, 0.15);
+        }
+        .alert-info {
+            background: var(--pink-light) !important;
+            border-color: var(--pink-secondary) !important;
+            color: var(--pink-dark) !important;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark">
+        <a class="navbar-brand" href="/admin/index"><i class="fas fa-cog"></i> 校园公告管理后台</a>
+        <div class="ml-auto">
+            <a href="/" class="btn btn-outline-light btn-sm mr-2" target="_blank">前台首页</a>
+            <a href="/admin/logout" class="btn btn-outline-light btn-sm">退出</a>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-2 d-md-block sidebar p-0">
+                <div class="nav flex-column">
+                    <a class="nav-link" href="/admin/index"><i class="fas fa-tachometer-alt"></i> 数据统计</a>
+                    <a class="nav-link" href="/admin/notices"><i class="fas fa-bullhorn"></i> 公告管理</a>
+                    <a class="nav-link" href="/admin/categories"><i class="fas fa-folder"></i> 分类管理</a>
+                    <a class="nav-link" href="/admin/tags"><i class="fas fa-tags"></i> 标签管理</a>
+                    <a class="nav-link" href="/admin/comments"><i class="fas fa-comments"></i> 评论管理</a>
+                    <a class="nav-link" href="/admin/users"><i class="fas fa-users"></i> 用户管理</a>
+                    <a class="nav-link active" href="/admin/logs"><i class="fas fa-history"></i> 操作日志</a>
+                </div>
+            </nav>
+
+            <main class="col-md-10 ml-sm-auto px-4 py-4">
+                <h4 class="mb-4"><i class="fas fa-history"></i> 操作日志（最近100条）</h4>
+
+                <div class="card">
+                    <div class="card-body">
+                        <table class="table table-sm table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>操作用户</th>
+                                    <th>操作类型</th>
+                                    <th>请求方法</th>
+                                    <th>参数</th>
+                                    <th>IP地址</th>
+                                    <th>操作时间</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:if="${#lists.isEmpty(logs)}">
+                                    <td colspan="7" class="text-center text-muted">
+                                        <i class="fas fa-info-circle"></i> 暂无操作日志，进行新增、修改、删除操作后将会记录
+                                    </td>
+                                </tr>
+                                <tr th:each="log : ${logs}">
+                                    <td th:text="${log.id}"></td>
+                                    <td th:text="${log.username}"></td>
+                                    <td><span class="badge badge-info" th:text="${log.operation}"></span></td>
+                                    <td><small th:text="${log.method}"></small></td>
+                                    <td><small th:text="${#strings.abbreviate(log.params, 50)}"></small></td>
+                                    <td th:text="${log.ip}"></td>
+                                    <td th:text="${#dates.format(log.createTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

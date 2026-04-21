@@ -1,0 +1,55 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+*.tmp
+*.log
+*.swp
+*.swo
+
+# Node / frontend
+node_modules/
+dist/
+build/
+.next/
+out/
+coverage/
+
+# Java / Maven
+target/
+.mvn/
+
+# Go
+bin/
+
+# Blockchain / Hardhat
+artifacts/
+cache/
+typechain-types/
+coverage.json
+deployments/
+
+# Local runtime / uploads
+logs/
+uploads/
+private_uploads/
+
+# Env files
+.env
+.env.*
+!.env.example
+!.env.local.example
+
+# Nested project ignores
+**/node_modules/
+**/target/
+**/logs/
+**/uploads/
+**/.next/
+**/artifacts/
+**/cache/
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.local.example
+

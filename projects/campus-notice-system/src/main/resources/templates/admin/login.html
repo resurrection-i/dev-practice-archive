@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>管理员登录</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 粉色主题配色 - 管理员登录页 */
+        :root {
+            --pink-primary: #ff6b9d;
+            --pink-dark: #e91e63;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #ff6b9d 0%, #e91e63 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: float 20s linear infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+        
+        .login-card {
+            max-width: 420px;
+            margin: 0 auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(255, 107, 157, 0.4);
+            border: none;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--pink-primary) 0%, var(--pink-dark) 100%) !important;
+            border: none !important;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--pink-dark) 0%, #c44569 100%) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 157, 0.4);
+        }
+        
+        .text-danger {
+            color: var(--pink-primary) !important;
+        }
+        
+        .form-control:focus {
+            border-color: var(--pink-primary);
+            box-shadow: 0 0 0 0.2rem rgba(255, 107, 157, 0.25);
+        }
+        
+        h3 {
+            color: var(--pink-dark);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card login-card">
+            <div class="card-body p-5">
+                <h3 class="text-center mb-4">
+                    <i class="fas fa-user-shield text-danger"></i> 管理员登录
+                </h3>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> 用户名</label>
+                        <input type="text" class="form-control" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> 密码</label>
+                        <input type="password" class="form-control" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-danger btn-block">
+                        <i class="fas fa-sign-in-alt"></i> 登录
+                    </button>
+                </form>
+                <div class="text-center mt-3">
+                    <a href="/">返回首页</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        $('#loginForm').submit(function(e) {
+            e.preventDefault();
+            $.ajax({
+                url: '/admin/login',
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function(res) {
+                    if (res.code === 200) {
+                        alert('登录成功');
+                        window.location.href = '/admin/index';
+                    } else {
+                        alert(res.message);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

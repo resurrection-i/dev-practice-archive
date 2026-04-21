@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>校园公告信息管理系统</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 粉色主题配色 */
+        :root {
+            --pink-primary: #ff6b9d;
+            --pink-secondary: #ffc1e3;
+            --pink-light: #fff0f6;
+            --pink-dark: #e91e63;
+            --pink-gradient-start: #ff6b9d;
+            --pink-gradient-end: #c44569;
+        }
+        
+        body { 
+            background: linear-gradient(135deg, #fff0f6 0%, #ffe4f0 100%);
+            min-height: 100vh;
+        }
+        
+        .navbar { 
+            background: linear-gradient(135deg, var(--pink-primary) 0%, var(--pink-dark) 100%) !important;
+            box-shadow: 0 2px 8px rgba(255, 107, 157, 0.3);
+        }
+        
+        .notice-card { 
+            transition: all 0.3s; 
+            border: none; 
+            box-shadow: 0 2px 12px 0 rgba(255, 107, 157, 0.15);
+            margin-bottom: 20px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .notice-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 24px 0 rgba(255, 107, 157, 0.25);
+        }
+        
+        .notice-top { 
+            border-left: 4px solid var(--pink-primary);
+            background: linear-gradient(90deg, var(--pink-light) 0%, white 100%);
+        }
+        
+        .tag-badge { 
+            margin-right: 5px;
+            background: var(--pink-secondary) !important;
+            color: var(--pink-dark) !important;
+        }
+        
+        .category-btn { 
+            margin-right: 10px; 
+            margin-bottom: 10px;
+            border-color: var(--pink-primary) !important;
+            color: var(--pink-primary) !important;
+        }
+        
+        .category-btn:hover, .category-btn.active {
+            background: var(--pink-primary) !important;
+            color: white !important;
+        }
+        
+        .top-notice-card { 
+            background: linear-gradient(135deg, var(--pink-gradient-start) 0%, var(--pink-gradient-end) 100%);
+            color: white;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(255, 107, 157, 0.3);
+        }
+        
+        .top-notice-card:hover { 
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #fff;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        .nav-link-with-avatar {
+            display: flex;
+            align-items: center;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--pink-primary) 0%, var(--pink-dark) 100%) !important;
+            border: none !important;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--pink-dark) 0%, var(--pink-gradient-end) 100%) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+        }
+        
+        .badge-danger {
+            background: var(--pink-primary) !important;
+        }
+        
+        .badge-warning {
+            background: var(--pink-secondary) !important;
+            color: var(--pink-dark) !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-graduation-cap"></i> 校园公告系统
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home"></i> 首页</a>
+                    </li>
+                    <li class="nav-item" th:if="${user != null}">
+                        <a class="nav-link" href="/user/favorites"><i class="fas fa-star"></i> 我的收藏</a>
+                    </li>
+                    <li class="nav-item" th:if="${user != null}">
+                        <a class="nav-link nav-link-with-avatar" href="/user/profile">
+                            <img th:src="${user.avatar != null && !user.avatar.isEmpty() ? user.avatar : '/images/default-avatar.svg'}" 
+                                 class="user-avatar" 
+                                 alt="头像"
+                                 onerror="this.src='/images/default-avatar.svg'">
+                            <span>
+                                <span th:text="${user.nickname}"></span>
+                                <span class="badge badge-danger ml-1" th:if="${user.role == 'ADMIN'}">管理员</span>
+                            </span>
+                        </a>
+                    </li>
+                    <li class="nav-item" th:if="${user != null && user.role == 'ADMIN'}">
+                        <a class="nav-link" href="/admin/index">
+                            <i class="fas fa-cog"></i> 后台管理
+                        </a>
+                    </li>
+                    <li class="nav-item" th:if="${user == null}">
+                        <a class="nav-link" href="/user/login"><i class="fas fa-sign-in-alt"></i> 登录</a>
+                    </li>
+                    <li class="nav-item" th:if="${user == null}">
+                        <a class="nav-link" href="/user/register"><i class="fas fa-user-plus"></i> 注册</a>
+                    </li>
+                    <li class="nav-item" th:if="${user != null}">
+                        <a class="nav-link" href="/user/logout"><i class="fas fa-sign-out-alt"></i> 退出</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <!-- 搜索和筛选 -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form action="/" method="get" class="form-inline">
+                    <div class="form-group mr-3">
+                        <label class="mr-2">分类筛选：</label>
+                        <button type="submit" name="categoryId" value="" class="btn btn-sm btn-outline-primary category-btn">
+                            全部
+                        </button>
+                        <button type="submit" name="categoryId" th:value="${category.id}" 
+                                th:each="category : ${categories}"
+                                th:text="${category.name}"
+                                th:classappend="${currentCategoryId == category.id} ? 'btn-primary' : 'btn-outline-primary'"
+                                class="btn btn-sm category-btn">
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="keyword" th:value="${keyword}" 
+                               class="form-control mr-2" placeholder="搜索公告...">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-search"></i> 搜索
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 置顶公告 -->
+        <div th:if="${topNotices != null && !topNotices.isEmpty()}" class="mb-4">
+            <h5 class="mb-3"><i class="fas fa-thumbtack text-danger"></i> 置顶公告</h5>
+            <div class="row">
+                <div class="col-md-12" th:each="notice : ${topNotices}">
+                    <div class="card top-notice-card">
+                        <div class="card-body">
+                            <h6 class="card-title">
+                                <a th:href="@{/notice/{id}(id=${notice.id})}" class="text-white" th:text="${notice.title}"></a>
+                            </h6>
+                            <small>
+                                <i class="fas fa-folder"></i> <span th:text="${notice.categoryName}"></span>
+                                <i class="fas fa-clock ml-3"></i> <span th:text="${#dates.format(notice.createTime, 'yyyy-MM-dd')}"></span>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 公告列表 -->
+        <h5 class="mb-3"><i class="fas fa-list"></i> 公告列表</h5>
+        <div class="row">
+            <div class="col-md-12" th:if="${notices == null || notices.isEmpty()}">
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle"></i> 暂无公告
+                </div>
+            </div>
+            <div class="col-md-6" th:each="notice : ${notices}">
+                <div class="card notice-card" th:classappend="${notice.isTop == 1} ? 'notice-top' : ''">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a th:href="@{/notice/{id}(id=${notice.id})}" th:text="${notice.title}"></a>
+                            <span class="badge badge-danger ml-2" th:if="${notice.isTop == 1}">置顶</span>
+                        </h5>
+                        <p class="card-text text-muted" th:text="${#strings.abbreviate(notice.content, 100)}"></p>
+                        <div class="mb-2">
+                            <span class="badge badge-primary tag-badge" th:each="tag : ${notice.tags}" 
+                                  th:text="${tag.name}" th:style="'background-color:' + ${tag.color}"></span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="fas fa-folder"></i> <span th:text="${notice.categoryName}"></span>
+                                <i class="fas fa-eye ml-2"></i> <span th:text="${notice.viewCount}"></span>
+                            </small>
+                            <small class="text-muted" th:text="${#dates.format(notice.createTime, 'yyyy-MM-dd HH:mm')}"></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-light text-center py-4 mt-5">
+        <div class="container">
+            <p class="text-muted mb-0">© 2025 校园公告信息管理系统 | 广州商学院</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
