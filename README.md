@@ -4,92 +4,81 @@
 
 ### 学习项目与课程实验归档
 
-记录 Web3、Java Web、Go 后端方向的阶段实践，不作为最终代表作，而是作为学习路径和项目实现过程的归档。
+记录 Web3、Java Web、Go 后端方向的阶段实践。  
+这里保存的是学习路径、实验过程和阶段性项目沉淀，而不是最终主打的代表作。
+
+</div>
+
+<div align="center">
+
+![Web3](https://img.shields.io/badge/Web3-Practice-1f2937?style=for-the-badge)
+![Java Web](https://img.shields.io/badge/Java%20Web-Archive-7c3aed?style=for-the-badge)
+![Go Backend](https://img.shields.io/badge/Go-Backend-0f766e?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Learning%20Archive-f59e0b?style=for-the-badge)
 
 </div>
 
 ---
 
-## 仓库说明
+## 仓库定位
 
-这个仓库用于整理我在课程学习、阶段练习和实验过程中完成的一组项目，覆盖：
+这个仓库用来整理我在课程学习、阶段练习和实验过程中完成的一组项目，主要覆盖 3 个方向：
 
-- 区块链应用与智能合约开发
-- Java Web 系统开发
-- Go 后端服务开发
+| 方向 | 内容 |
+| --- | --- |
+| Web3 / 区块链 | 智能合约、DApp、链上业务练习 |
+| Java Web | Spring Boot、MyBatis、Thymeleaf 业务系统 |
+| Go 后端 | Gin、GORM、JWT、RBAC 与基础服务开发 |
 
-这里的项目更偏“学习过程记录”和“阶段实践沉淀”，而不是海投时主打的最终代表作。
+和单独维护的“主打项目仓库”不同，这里更强调：
 
-真正更适合放到简历主位、单独拿出来重点展示的项目，我会放在独立仓库中维护。
+- 学习过程的记录
+- 技术路线的积累
+- 不同方向的阶段实践
+- 相对完整、适合公开查看的实验项目
 
 ---
 
-## 当前保留项目
+## 项目索引
 
-### 1. academic-copyright-system
+### Web3 / 区块链方向
 
-路径：[`projects/academic-copyright-system`](projects/academic-copyright-system)
+| 项目 | 简介 | 技术栈 |
+| --- | --- | --- |
+| [`academic-copyright-system`](projects/academic-copyright-system) | 学术成果版权存证系统，支持作品上链、NFT 存证、版权转让与侵权验证 | Solidity, Hardhat, React |
+| [`blockchain-voting-dapp`](projects/blockchain-voting-dapp) | 区块链投票练习项目，包含候选人管理、链上投票与结果展示 | Solidity, Hardhat, React |
+| [`blockchain-crowdfunding-platform`](projects/blockchain-crowdfunding-platform) | 区块链众筹练习项目，覆盖项目创建、捐款、资金请求与投票审批 | Solidity, Hardhat, React, Spring Boot |
 
-基于以太坊的学术成果版权存证系统，支持作品哈希上链、NFT 存证、版权转让追踪和侵权验证。
+### 后端 / Web 系统方向
 
-方向标签：
+| 项目 | 简介 | 技术栈 |
+| --- | --- | --- |
+| [`campus-notice-system`](projects/campus-notice-system) | 校园公告信息管理系统，包含前台浏览与后台管理流程 | Spring Boot, MyBatis, Thymeleaf, MySQL |
+| [`go-task-manager`](projects/go-task-manager) | Go 任务管理系统，支持 JWT 鉴权、RBAC 权限控制和任务流转 | Go, Gin, GORM, MySQL |
 
-- Solidity
-- Hardhat
-- React
-- DApp
+---
 
-### 2. blockchain-voting-dapp
+## 快速浏览
 
-路径：[`projects/blockchain-voting-dapp`](projects/blockchain-voting-dapp)
+### 01. academic-copyright-system
 
-一个区块链投票练习项目，包含智能合约和前端页面，主要用于练习钱包连接、候选人管理、链上投票和结果展示。
+偏区块链存证场景，能看到合约设计、前端交互和 NFT 化存证的练习思路。
 
-方向标签：
+### 02. blockchain-voting-dapp
 
-- Solidity
-- Hardhat
-- React
-- MetaMask
+偏轻量级 Web3 项目，适合快速展示钱包连接、链上投票和前端读取结果的基础能力。
 
-### 3. blockchain-crowdfunding-platform
+### 03. blockchain-crowdfunding-platform
 
-路径：[`projects/blockchain-crowdfunding-platform`](projects/blockchain-crowdfunding-platform)
+是这个仓库里相对综合的一个练习项目，同时包含合约、前端和 Java 后端。
 
-一个区块链众筹平台练习项目，包含智能合约、React 前端和 Java 后端，覆盖项目创建、捐款、资金请求和投票审批等流程。
+### 04. campus-notice-system
 
-方向标签：
+更偏传统 Java Web 业务系统，适合展示分层结构、后台管理与数据库建模能力。
 
-- Solidity
-- Hardhat
-- React
-- Spring Boot
+### 05. go-task-manager
 
-### 4. campus-notice-system
-
-路径：[`projects/campus-notice-system`](projects/campus-notice-system)
-
-一个基于 Spring Boot + MyBatis + Thymeleaf 的校园公告信息管理系统，包含前台公告浏览与后台管理流程。
-
-方向标签：
-
-- Spring Boot
-- MyBatis
-- Thymeleaf
-- MySQL
-
-### 5. go-task-manager
-
-路径：[`projects/go-task-manager`](projects/go-task-manager)
-
-一个基于 Go 的任务管理系统，支持 JWT 鉴权、RBAC 权限控制、任务创建与状态流转。
-
-方向标签：
-
-- Go
-- Gin
-- GORM
-- JWT
+偏后端服务练习，重点在鉴权、权限控制和任务流转设计。
 
 ---
 
@@ -97,12 +86,17 @@
 
 原始学习目录里还有不少：
 
-- 零散的静态页面练习
+- 零散静态页面练习
 - 重复迭代版本
 - 过程稿和实验草稿
-- 未整理完成的半成品
+- 没有整理完成的半成品
 
-为了避免仓库过于杂乱，这里只保留相对完整、比较容易说明白、适合公开查看的项目。
+为了让仓库结构更清晰，这里只保留：
+
+- 相对完整的项目
+- 业务场景比较明确的项目
+- 能代表某一类技术方向的项目
+- 适合公开查看与后续继续整理的项目
 
 ---
 
@@ -122,7 +116,7 @@ dev-practice-archive/
 
 ## 阅读建议
 
-如果想快速了解我的学习路径，建议按下面顺序查看：
+如果想快速了解这个仓库，建议按这个顺序看：
 
 1. `academic-copyright-system`
 2. `blockchain-voting-dapp`
@@ -132,9 +126,9 @@ dev-practice-archive/
 
 ---
 
-## 说明
+## 后续整理计划
 
-- 这些项目保留了各自原始技术路线和实现方式
-- 我会逐步统一 README 风格，并持续清理缓存、日志和无关文件
-- 如果某个项目后续继续深入，我会把它拆到独立仓库单独维护
-
+- 为每个项目补充截图或演示图
+- 继续统一各子项目 README 风格
+- 清理历史实验项目中的冗余文件
+- 将后续继续深入的项目拆到独立仓库维护
