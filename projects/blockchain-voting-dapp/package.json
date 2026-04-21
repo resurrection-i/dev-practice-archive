@@ -1,0 +1,26 @@
+{
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "ethers": "^6.14.3",
+    "glob": "^9.3.5",
+    "hardhat": "^2.24.1",
+    "hardhat-deploy": "^1.0.2"
+  },
+  "name": "blockchain-vote-demo",
+  "version": "1.0.0",
+  "description": "This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.",
+  "main": "hardhat.config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@nomicfoundation/hardhat-ethers": "^3.0.9"
+  }
+}

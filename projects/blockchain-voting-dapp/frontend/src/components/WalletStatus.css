@@ -1,0 +1,33 @@
+.wallet-status {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.status-indicator-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #666;
+}
+
+.status-indicator.connected {
+  background-color: #4CAF50;
+}
+
+.wallet-address {
+  background-color: #f5f5f5;
+  border-radius: 20px;
+  padding: 8px 15px;
+  margin-top: 10px;
+  font-size: 14px;
+  font-family: monospace;
+  display: inline-block;
+}

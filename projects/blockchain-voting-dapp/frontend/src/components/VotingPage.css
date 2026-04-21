@@ -1,0 +1,127 @@
+.voting-page {
+  padding: 20px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.wallet-info {
+  display: flex;
+  align-items: center;
+  background-color: #f5f5f5;
+  padding: 10px 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.wallet-info .status {
+  background-color: #4caf50;
+  color: white;
+  font-size: 14px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-right: 10px;
+}
+
+.wallet-info .address {
+  font-family: monospace;
+  color: #333;
+}
+
+.candidates-section {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.candidates-section h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 18px;
+  color: #333;
+}
+
+.candidates-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.candidate-card {
+  border: 2px solid #eee;
+  border-radius: 6px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.candidate-card:hover {
+  border-color: #bbdefb;
+  background-color: #f8f9fa;
+}
+
+.candidate-card.selected {
+  border-color: #2196f3;
+  background-color: #e3f2fd;
+}
+
+.candidate-name {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.candidate-votes {
+  font-size: 14px;
+  color: #666;
+}
+
+.vote-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.selected-info {
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #2196f3;
+}
+
+.vote-btn {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.vote-btn:hover {
+  background-color: #0d8bf2;
+}
+
+.vote-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #d32f2f;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.vote-confirmed {
+  background-color: #e8f5e9;
+  border: 1px solid #a5d6a7;
+  color: #2e7d32;
+  padding: 30px;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 18px;
+}

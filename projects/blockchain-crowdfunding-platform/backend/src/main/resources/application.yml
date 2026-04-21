@@ -1,0 +1,74 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: crowdfunding-backend
+  
+  # 解决Swagger与Spring Boot 2.6+兼容性问题
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  
+  # 数据源配置 (SQLite)
+  datasource:
+    driver-class-name: org.sqlite.JDBC
+    url: jdbc:sqlite:./crowdfunding.db
+    username: 
+    password: 
+  
+  # SQL初始化配置
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:schema.sql
+      continue-on-error: false
+    
+  # 连接池配置
+  hikari:
+    minimum-idle: 1
+    maximum-pool-size: 5
+    idle-timeout: 600000
+    max-lifetime: 1800000
+    connection-timeout: 30000
+
+# MyBatis Plus 配置
+mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.crowdfunding.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+
+# JWT 配置
+jwt:
+  secret: your-secret-key-at-least-256-bits-long-for-HS256-algorithm-please-change-in-production-environment
+  expiration: 86400000
+  header: Authorization
+  prefix: Bearer 
+
+# 区块链配置
+blockchain:
+  network-name: Hardhat Local
+  chain-id: 31337
+  rpc-url: http://localhost:8545
+  contract-address: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+
+# Knife4j 配置
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
+# 日志配置
+logging:
+  level:
+    com.crowdfunding: debug
+    org.springframework.security: info
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
