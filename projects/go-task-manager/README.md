@@ -1,176 +1,115 @@
-# Task Management System
+# Go 任务管理系统
 
-A comprehensive task management system built with Go, featuring user authentication, role-based access control, and task tracking functionality.
+基于 **Go + Gin + GORM + MySQL** 开发的任务管理练习项目，支持用户鉴权、RBAC 权限控制、任务创建分配与状态流转。
 
-## Features
+---
 
-- User authentication using JWT
-- Role-based access control (RBAC)
-- Task management (create, update, delete, assign)
-- Task history tracking
-- User management
-- Configurable via YAML/JSON
-- Logging with Zap
+## 项目简介
 
-## Technologies Used
+这个项目主要用于练习 Go Web 后端开发的基础能力，围绕“用户管理 + 任务管理 + 权限控制”构建了一套较完整的后台服务。
+
+项目包含：
+
+- 用户注册与登录
+- JWT 鉴权
+- 角色权限控制
+- 任务创建、分配、更新与删除
+- 任务历史记录
+- 简单前端页面
+
+整体更偏后端实践型项目，适合用来展示 Go 在业务系统开发中的基本能力。
+
+---
+
+## 核心功能
+
+- 用户注册与登录
+- JWT 身份认证
+- RBAC 权限控制
+- 任务创建、修改、删除
+- 任务分配与状态变更
+- 任务历史追踪
+- 用户管理
+
+---
+
+## 技术栈
+
+| 层级 | 技术方案 |
+| --- | --- |
+| 后端语言 | Go |
+| Web 框架 | Gin |
+| ORM | GORM |
+| 数据库 | MySQL |
+| 鉴权 | JWT |
+| 配置管理 | Viper |
+| 日志 | Zap |
+
+---
+
+## 项目结构
+
+```text
+go-task-manager/
+|-- config/
+|-- handlers/
+|-- logger/
+|-- middleware/
+|-- models/
+|-- routes/
+|-- frontend/
+|-- main.go
+|-- go.mod
+`-- README.md
+```
+
+---
+
+## 快速开始
+
+### 环境要求
 
 - Go 1.21+
-- Gin Web Framework
-- GORM (MySQL)
-- JWT for authentication
-- Zap for logging
-- Viper for configuration
-- Validator for input validation
+- MySQL 5.7+
 
-## Prerequisites
+### 配置项目
 
-- Go 1.21 or higher
-- MySQL 5.7 or higher
+将配置文件按本地环境调整：
 
-## Installation
+- 使用 `config.example.yaml` 作为参考
+- 配置数据库连接信息
+- 配置 JWT 密钥和日志路径
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd task-management
-```
+### 启动项目
 
-2. Install dependencies:
 ```bash
 go mod download
-```
-
-3. Configure the application:
-- Copy `config.yaml` and adjust the settings according to your environment
-- Set up your MySQL database using the provided `schema.sql`
-
-4. Build and run:
-```bash
 go build
-./task-management
+./go-task-manager
 ```
 
-## Configuration
+---
 
-The application can be configured using `config.yaml`. Key configuration options include:
+## 接口能力
 
-```yaml
-server:
-  port: 8080
-  mode: debug
+主要包含三类接口：
 
-database:
-  driver: mysql
-  host: localhost
-  port: 3306
-  username: root
-  password: root
-  dbname: task_management
+- 认证接口：登录、注册
+- 用户接口：用户信息查询与管理
+- 任务接口：任务创建、列表、更新、分配、历史记录
 
-jwt:
-  secret: your-secret-key
-  expire: 24 # hours
+---
 
-log:
-  level: debug
-  filename: ./logs/app.log
-  maxSize: 100
-  maxBackups: 3
-  maxAge: 28
-  compress: true
-```
+## 项目特点
 
-## API Endpoints
+- 具备完整的用户与任务模型
+- 包含 JWT 鉴权和 RBAC 权限控制
+- 后端结构相对清晰，适合练习分层设计
+- 可作为 Go Web 服务方向的阶段项目展示
 
-### Authentication
-- POST `/api/login` - User login
-- POST `/api/register` - User registration
+---
 
-### Users
-- GET `/api/users` - List all users
-- GET `/api/users/:id` - Get user details
-- PUT `/api/users/:id` - Update user
-- DELETE `/api/users/:id` - Delete user
+## 适合简历怎么写
 
-### Tasks
-- POST `/api/tasks` - Create task
-- GET `/api/tasks` - List all tasks
-- GET `/api/tasks/:id` - Get task details
-- PUT `/api/tasks/:id` - Update task
-- DELETE `/api/tasks/:id` - Delete task
-- PUT `/api/tasks/:id/status` - Update task status
-- PUT `/api/tasks/:id/assign` - Assign task
-- GET `/api/tasks/:id/history` - Get task history
+> 基于 Go + Gin + GORM 开发任务管理系统，实现 JWT 鉴权、RBAC 权限控制、任务创建分配与状态流转等功能，完成 Go 后端业务系统的基础实践。
 
-## Role-Based Access Control
-
-The system implements three roles with different permissions:
-
-1. Admin
-   - Full access to all features
-   - Can manage users and roles
-
-2. Manager
-   - Can read user information
-   - Full access to task management
-   - Can assign tasks
-
-3. User
-   - Can create tasks
-   - Can read all tasks
-   - Can update and delete own tasks
-
-## Default Credentials
-
-The system comes with a default admin user:
-- Username: admin
-- Password: admin123
-
-## Development
-
-### Project Structure
-```
-.
-├── config/
-│   └── config.go
-├── handlers/
-│   ├── auth.go
-│   ├── task.go
-│   └── user.go
-├── logger/
-│   └── logger.go
-├── middleware/
-│   ├── jwt.go
-│   └── rbac.go
-├── models/
-│   ├── task.go
-│   └── user.go
-├── routes/
-│   └── routes.go
-├── config.yaml
-├── go.mod
-├── main.go
-├── README.md
-└── schema.sql
-```
-
-## Security Considerations
-
-- Passwords are hashed using bcrypt
-- JWT tokens are used for authentication
-- Role-based access control for authorization
-- Input validation for all requests
-- Secure configuration management
-- Comprehensive logging
-
-## Contributing
-
-1. Fork the repository
-2. Create your feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a new Pull Request
-
-## License
-
-This project is licensed under the MIT License. 
